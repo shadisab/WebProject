@@ -1,0 +1,113 @@
+<html>
+
+<head>
+    <title>LogInPage</title>
+    <link rel="stylesheet" type="text/css" href="HomePage/fonts/iconic/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" type="text/css" href="HomePage/css/util.css">
+    <link rel="stylesheet" type="text/css" href="HomePage/css/main.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyCCkeCglasI9cz9KSrfgiTCMOzdgHNYhQM",
+            authDomain: "webproject-66098.firebaseapp.com",
+            databaseURL: "https://webproject-66098.firebaseio.com",
+            projectId: "webproject-66098",
+            storageBucket: "webproject-66098.appspot.com",
+            messagingSenderId: "578047006972",
+            appId: "1:578047006972:web:2fd6446310af9e46fc1f79",
+            measurementId: "G-VK41Q22SD9"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+</head>
+
+<body>
+    <div class="limiter">
+        <div class="container-login100" style="background-image: url('HomePage/images/bck-ground.jpg');">
+            <div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
+                <span class="login100-form-title p-b-49">
+                    Login
+                </span>
+
+                <div class="wrap-input100 validate-input m-b-23" data-validate="Email is reauired">
+                    <span class="label-input100">Email</span>
+                    <input class="input100" type="text" id="email" placeholder="Type your Email">
+                    <span class="focus-input100" data-symbol="&#9993;"></span>
+                </div>
+
+                <div class="wrap-input100 validate-input" data-validate="Password is required">
+                    <span class="label-input100">Password</span>
+                    <input class="input100" type="password" id="pass" placeholder="Type your password">
+                    <span class="focus-input100" data-symbol="&#xf190;"></span>
+                </div>
+
+                <div class="text-right p-t-8 p-b-31">
+                    <button id="frg-pass">
+                        Forgot password?
+                    </button>
+                </div>
+
+                <div class="container-login100-form-btn m-t-52">
+                    <div id="lgnbtnSubmit" class="wrap-login100-form-btn">
+                        <div class="login100-form-bgbtn"></div>
+                        <button class="login100-form-btn">
+                            Login
+                        </button>
+                    </div>
+                </div>
+                <div class="container-login100-form-btn m-t-20 m-b-70">
+                    <div id="sgnbtnSubmit" class="wrap-login100-form-btn">
+                        <div class="login100-form-bgbtn"></div>
+                        <button class="login100-form-btn">
+                            Sign up
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#lgnbtnSubmit").click(function () {
+                let email = $("#email").val();
+                let pass = $("#pass").val();
+                console.log(email);
+                firebase.auth().signInWithEmailAndPassword(email, pass).then(function () {
+                    window.location.href = "Weather.html";
+                })
+                    .catch(function (error) {
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+                        console.log(errorCode + errorMessage);
+                        alert("Invalid Username/Password,Please retry!");
+                    });
+            });
+            $("#frg-pass").click(() => {
+                let email = $("#email").val();
+                if (email) {
+                    firebase.auth().sendPasswordResetEmail(email).then(() => {
+                        alert("Reset password mail , sent to your email: " + email);
+                    })
+                }
+                else {
+                    alert("You Must Enter the email");
+                }
+            })
+            $("#sgnbtnSubmit").click(function () {
+                window.location.href = "Register.html";
+            });
+        });
+    </script>
+</body>
+
+</html>
