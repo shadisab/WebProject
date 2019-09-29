@@ -7,6 +7,7 @@
     <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-storage.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/6.6.2/firebase-auth.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/6.6.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-database.js"></script>
 
     <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
@@ -26,6 +27,7 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         var storageRef = firebase.storage().ref();
+        var database = firebase.database();
     </script>
     <link rel="stylesheet" type="text/css" href="register.css">
     <link rel="stylesheet" type="text/css" href="HomePage/css/util.css">
@@ -35,6 +37,39 @@
 <body>
     <script>
         $(document).ready(function () {
+            var i = 0;
+            /*Retrive the coachs from database by name*/
+            $("#Mselect").click(() => {
+                
+                
+                if ($("#Mselect").val() == "Client") {
+                    $("#coachChoose").show()
+                    if(i == 0){
+                    var root = firebase.database().ref();
+                    var testCo = root.child('Coach');
+                    testCo.on("value", function (snapshot) {
+                        var name = ""
+                        var uidN = ""
+                        var optionsAsString = ""
+                        for (var i = 0; i < Object.keys(snapshot.val()).length; i++) {
+                            uidN = Object.keys(snapshot.val())[i]
+                            optionsAsString += "<option value='" + uidN + "'>" + snapshot.val()[uidN]["Username"] + "</option>";
+                        }
+                        $("#Cselect").append(optionsAsString);
+
+                    }, function (errorObject) {
+                        console.log("The read failed: " + errorObject.code);
+                    });
+                   
+                }i++;} 
+                if ($("#Mselect").val() == "Coach") {
+                    $("#coachChoose").hide()
+                }
+            })
+            /*************************************/
+
+
+            /*Choose Profile Image*/
             var file;
             $("#imag").change((e) => {
                 file = e.target.files[0];
@@ -46,24 +81,52 @@
                 }
                 fr.readAsDataURL(file);
             });
+            /*************************************/
+
             $("#sign-up-btn").click(() => {
                 if (checkValidation()) {
-                    console.log($("#mail").val());
-                    console.log($("#pass").val());
-                    console.log($("#select").val());
+                    firebase.auth().createUserWithEmailAndPassword($("#mail").val(), $("#pass").val()).then(function () {
+                        var UID = firebase.auth().currentUser.uid;
+                        if ($("#Mselect").val() == "Client") {
+                            firebase
+                                .database()
+                                .ref($("#Mselect").val() + '/' + UID)
+                                .set({
+                                    Username: $("#name").val(),
+                                    Email: $("#mail").val(),
+                                    Coach: $("#Cselect").val(),
+                                });
+                        }
+                        if ($("#Mselect").val() == "Coach") {
+                            firebase
+                                .database()
+                                .ref($("#Mselect").val() + '/' + UID)
+                                .set({
+                                    Username: $("#name").val(),
+                                    Email: $("#mail").val(),
 
-                    firebase.auth().createUserWithEmailAndPassword($("#mail").val(), $("#pass").val())
+
+                                });
+                        }
+                    }).catch(function (error) {
+                        console.log(error)
+                    })
                         .then(() => {
                             var userImageRef = storageRef.child('users-images/' + $("#mail").val());
-                            userImageRef.put(file).then(alert("Register complet"));
+                            userImageRef.put(file).then(alert("Register complet"))
                         }).catch(function (error) {
                             console.log(error.code);
                         });
                 }
             })
+
+            /*Go Back Button*/
             $("#cancelbtnSubmit").click(function () {
                 window.location.href = "LoginPage.html";
             });
+            /*************************************/
+
+            /*Check Validation*/
             function checkValidation() {
                 if ($("#name").val() == '') {
                     alert("You Must Enter a Name");
@@ -77,8 +140,12 @@
                     alert("You Must Enter a Password");
                     return false;
                 }
-                if ($("#select").val() =='choose') {
+                if ($("#Mselect").val() == 'Choose') {
                     alert(" Account type is required");
+                    return false;
+                }
+                if ($("#Cselect").val() == 'Choose') {
+                    alert("You must Choose your Coach");
                     return false;
                 }
                 if (!$("#imag").val()) {
@@ -87,10 +154,10 @@
                 }
                 return true;
             }
-            
+            /*****************************************/
+
         });
     </script>
-
     <div class="limiter">
         <div class="container-login100" style="background-image: url('HomePage/images/bck-ground.jpg');">
             <div class="wrap-maindiv">
@@ -134,10 +201,18 @@
                         <span class="label-input100">Which type of account would you like to create?</span>
                         <br>
                         </br>
-                        <select id="select">
-                            <option value="choose">choose</option>
+                        <select id="Mselect">
+                            <option id="Choose" value="Choose" hidden="true">Choose</option>
                             <option value="Coach">Coach</option>
-                            <option value="client">client</option>
+                            <option value="Client">Client</option>
+                        </select>
+                    </div>
+                    <div class="wrap-input100 validate-input" data-validate="Account type is required" id="coachChoose">
+                        <span class="label-input100">Choose your coach</span>
+                        <br>
+                        </br>
+                        <select id="Cselect">
+                            <option id="CoachChoose" value="Choose" hidden="true">Choose</option>
                         </select>
                     </div>
                     <div class="container-login100-form-btn m-t-52">

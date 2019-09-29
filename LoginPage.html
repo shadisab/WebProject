@@ -5,10 +5,14 @@
     <link rel="stylesheet" type="text/css" href="HomePage/fonts/iconic/css/material-design-iconic-font.min.css">
     <link rel="stylesheet" type="text/css" href="HomePage/css/util.css">
     <link rel="stylesheet" type="text/css" href="HomePage/css/main.css">
-    
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-storage.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/6.6.2/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/6.6.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-database.js"></script>
 
     <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
@@ -81,9 +85,33 @@
             $("#lgnbtnSubmit").click(function () {
                 let email = $("#email").val();
                 let pass = $("#pass").val();
-                console.log(email);
                 firebase.auth().signInWithEmailAndPassword(email, pass).then(function () {
-                    window.location.href = "Weather.html";
+                    var root = firebase.database().ref();
+                    var testCo = root.child('Coach');
+                    var testCI = root.child('Client');
+                    /*upadte specific UID*/
+                    /* testCo.orderByChild('Email').equalTo($("#email").val()).on("value", function (snapshot) {
+                         console.log(Object.keys(snapshot.val())[0]);  // get UID ELEMNT
+                         snapshot.forEach(function (data) {
+                             console.log(data.val());
+                             testCo.child(firebase.auth().currentUser.uid +'/'+ 'Clienst/' + 'ps').set({
+                                 Protine: '100g'
+ 
+                             })
+                             // window.location.href = "CoachPage.html"
+                             // console.log('Coach');
+                         });
+                     })*/
+
+                     /*get the UID by orderr*/
+
+                    testCI.orderByChild('Email').equalTo($("#email").val()).on("value", function (snapshot) {
+                        snapshot.forEach(function (data) {
+                            /*From Here if yes go to CLIENT page*/
+                            console.log('CLIENT');
+                        });
+                    })
+
                 })
                     .catch(function (error) {
                         var errorCode = error.code;
