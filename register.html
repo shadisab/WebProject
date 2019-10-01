@@ -38,32 +38,36 @@
     <script>
         $(document).ready(function () {
             var i = 0;
+          
             /*Retrive the coachs from database by name*/
             $("#Mselect").click(() => {
-                
-                
                 if ($("#Mselect").val() == "Client") {
-                    $("#coachChoose").show()
-                    if(i == 0){
-                    var root = firebase.database().ref();
-                    var testCo = root.child('Coach');
-                    testCo.on("value", function (snapshot) {
-                        var name = ""
-                        var uidN = ""
-                        var optionsAsString = ""
-                        for (var i = 0; i < Object.keys(snapshot.val()).length; i++) {
-                            uidN = Object.keys(snapshot.val())[i]
-                            optionsAsString += "<option value='" + uidN + "'>" + snapshot.val()[uidN]["Username"] + "</option>";
-                        }
-                        $("#Cselect").append(optionsAsString);
-
-                    }, function (errorObject) {
-                        console.log("The read failed: " + errorObject.code);
-                    });
-                   
-                }i++;} 
-                if ($("#Mselect").val() == "Coach") {
-                    $("#coachChoose").hide()
+                    $("#coachChooseDiv").show() 
+                    $("#HightDIV").show()
+                    $("#WeightDIV").show()
+                    $("#AgeDIV").show()
+                    if (i == 0) {
+                        var root = firebase.database().ref();
+                        var testCo = root.child('Coach');
+                        testCo.on("value", function (snapshot) {
+                            var name = ""
+                            var uidN = ""
+                            var optionsAsString = ""
+                            for (var i = 0; i < Object.keys(snapshot.val()).length; i++) {
+                                uidN = Object.keys(snapshot.val())[i]
+                                optionsAsString += "<option value='" + uidN + "'>" + snapshot.val()[uidN]["Username"] + "</option>";
+                            }
+                            $("#Cselect").append(optionsAsString);
+                        }, function (errorObject) {
+                            console.log("The read failed: " + errorObject.code);
+                        });
+                    } i++;
+                }
+                if ($("#Mselect").val() == "Coach") { //Hide NOT fields required Coach 
+                    $("#coachChooseDiv").hide()
+                    $("#HightDIV").hide()
+                    $("#WeightDIV").hide()
+                    $("#AgeDIV").hide()
                 }
             })
             /*************************************/
@@ -94,7 +98,28 @@
                                 .set({
                                     Username: $("#name").val(),
                                     Email: $("#mail").val(),
-                                    Coach: $("#Cselect").val(),
+                                    Coach: $("#Cselect").val(), //UID OF THE COACH 
+                                    Hight: $("#Hight").val(),
+                                    Weight: $("#Weight").val(),
+                                    Age:$("#Age").val(),
+                                });
+                            /*After ACCEPTED new client */
+                          /*  firebase
+                                .database()
+                                .ref('Coach/' + $("#Cselect").val() + '/' + 'Clients/' + UID + '/')
+                                .set({
+                                    Username: $("#name").val(),
+                                    Email: $("#mail").val(),
+                                    Hight: $("#Hight").val(),
+                                    Weight: $("#Weight").val(),
+                                    Age:$("#Age").val(),
+                                });*/
+                                /*Add the request to selected Coach */
+                                firebase
+                                .database()
+                                .ref('Coach/' + $("#Cselect").val() + '/' + 'New Client requests/' + UID + '/')
+                                .set({
+                                    Status: "FALSE",
                                 });
                         }
                         if ($("#Mselect").val() == "Coach") {
@@ -104,8 +129,6 @@
                                 .set({
                                     Username: $("#name").val(),
                                     Email: $("#mail").val(),
-
-
                                 });
                         }
                     }).catch(function (error) {
@@ -144,10 +167,23 @@
                     alert(" Account type is required");
                     return false;
                 }
-                if ($("#Cselect").val() == 'Choose') {
+                if ($.isNumeric($("#Hight").val()) && ($("#Hight").val() == 0) && $("#Mselect").val() != 'Coach') {
+                    alert(" Hight is required");
+                    return false;
+                }
+                if ($.isNumeric($("#Age").val()) && ($("#Age").val() < 18) && $("#Mselect").val() != 'Coach') {
+                    alert(" Age most be bigger then 18");
+                    return false;
+                }
+                if ($.isNumeric($("#Weight").val()) && ($("#Hight").val() == 0) && $("#Mselect").val() != 'Coach') {
+                    alert(" Weight is required");
+                    return false;
+                }
+                if ($("#Cselect").val() == 'Choose' && $("#Mselect").val() != 'Coach') {
                     alert("You must Choose your Coach");
                     return false;
                 }
+                
                 if (!$("#imag").val()) {
                     alert("You Must Enter a Photo");
                     return false;
@@ -190,14 +226,14 @@
                             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" placeholder="Type your Email">
                         <span class="focus-input100" data-symbol="&#9993;"></span>
                     </div>
-                    <div class="wrap-input100 validate-input" data-validate="Password is required">
+                    <div class="wrap-input100 validate-input m-b-23" data-validate="Password is required">
                         <span class="label-input100">Password</span>
                         <input class="input100" id="pass" type="password" name="password"
                             placeholder="Type your Password">
                         <span class="focus-input100" data-symbol="&#xf190;"></span>
                     </div>
 
-                    <div class="wrap-input100 validate-input" data-validate="Account type is required">
+                    <div class="wrap-input100 validate-input m-b-23" data-validate="Account type is required">
                         <span class="label-input100">Which type of account would you like to create?</span>
                         <br>
                         </br>
@@ -207,7 +243,7 @@
                             <option value="Client">Client</option>
                         </select>
                     </div>
-                    <div class="wrap-input100 validate-input" data-validate="Account type is required" id="coachChoose">
+                    <div class="wrap-input100 validate-input m-b-23" data-validate="Account type is required" id="coachChooseDiv">
                         <span class="label-input100">Choose your coach</span>
                         <br>
                         </br>
@@ -215,6 +251,26 @@
                             <option id="CoachChoose" value="Choose" hidden="true">Choose</option>
                         </select>
                     </div>
+                    <div class="wrap-input100 validate-input m-b-23" id="HightDIV">
+                        <span class="label-input100">Hight in CM</span>
+                        <input class="input100" id="Hight" type="number" name="Hight"
+                            placeholder="Type your Hight in CM" value="0">
+                        <span class="focus-input100"></span>
+                    </div>
+                    <div class="wrap-input100 validate-input m-b-23" id="WeightDIV">
+                        <span class="label-input100">Weight in KG</span>
+                        <input class="input100" id="Weight" type="number" name="Weight"
+                            placeholder="Type your Weight in KG" value="0">
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input m-b-23" id="AgeDIV">
+                            <span class="label-input100">Age</span>
+                            <input class="input100" id="Age" type="number" name="Age"
+                                placeholder="Enter your Age" value="0">
+                            <span class="focus-input100"></span>
+                        </div>
+
                     <div class="container-login100-form-btn m-t-52">
                         <div id="lgnbtnSubmit" class="wrap-login100-form-btn">
                             <div class="login100-form-bgbtn"></div>
