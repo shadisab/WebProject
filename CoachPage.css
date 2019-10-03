@@ -1,0 +1,134 @@
+.Toolbar{
+    background: -webkit-linear-gradient(right, #00dbde, #fc00ff, #00dbde, #fc00ff);
+    background: -o-linear-gradient(right, #00dbde, #fc00ff, #00dbde, #fc00ff);
+    background: -moz-linear-gradient(right, #00dbde, #fc00ff, #00dbde, #fc00ff);
+    background: linear-gradient(right, #00dbde, #fc00ff, #00dbde, #fc00ff);
+    display: inline-block;
+    height: 6.4%;
+    width: 100%;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+.imggg{
+    width:3.1%;
+    height: 100%;
+    border-radius: 50%;
+    margin: 0;
+    padding: 0;
+    float: right;
+}
+.use-acc{
+    float:right;
+    font-family: Poppins-Medium;
+    font-size: 20px;
+    color: black;
+    margin-top: 7.5px;
+    margin-right: 10px;
+}
+/*notification button*/
+.notification {
+    background-color: #00dbde;
+    font-family: Poppins-Medium;
+    width:10%;
+    height: 100%;
+    margin-right: 40;
+    float: right;
+    border: transparent;
+    border-radius: 2px;
+    justify-content: center;
+    align-items: center;
+    
+  }
+  
+  .notification:hover {
+    background-color: rgb(173, 10, 152);
+    color: rgb(9, 253, 253);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    width:200px;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    
+  }
+  
+  .notification .badge {
+    float: right;
+    width: 20;
+    height: 30;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+/***************************************/
+.req-btn{
+    margin-right: 40;
+    float: right;
+    width:10%;
+    height: 100%;
+    font-family: Poppins-Medium;
+    border: transparent;
+    background-color:  #00dbde;
+    justify-content: center
+
+}
+.req-btn:hover{
+    background-color: rgb(173, 10, 152);
+    color: rgb(9, 253, 253);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    width:200px;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+}
+.sgnout-btn{
+    font-family: Poppins-Medium;
+    font-size: 16px;
+    color: black;
+    line-height: 1.2;
+    text-transform: uppercase;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    width: 100px;
+    height: 100%;
+    border-bottom-right-radius: 25px; 
+    border-top-right-radius: 25px;
+    border: transparent;
+    background-color: rgb(0, 255, 213);
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+}
+.sgnout-btn:hover{
+    background-color: rgb(173, 10, 152);
+    color: rgb(9, 253, 253);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    width:200px;
+}
+
+/**********************TABLE***************************/
+#Clients {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #Clients td, #Clients th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #Clients tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #Clients tr:hover {background-color: #ddd;}
+  
+  #Clients th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+  }
+  /***********************************************************/

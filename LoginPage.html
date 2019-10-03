@@ -89,6 +89,18 @@
                     var root = firebase.database().ref();
                     var testCo = root.child('Coach');
                     var testCI = root.child('Client');
+
+                    testCo.once('value', function (snapshot) {
+                        if (snapshot.hasChild(firebase.auth().currentUser.uid)) {
+                            window.location.href = "CoachPage.html"
+                        }
+                    });
+
+                    testCI.once('value', function (snapshot) {
+                        if (snapshot.hasChild(firebase.auth().currentUser.uid)) {
+                            alert('exists');
+                        }
+                    });
                     /*upadte specific UID*/
                     /* testCo.orderByChild('Email').equalTo($("#email").val()).on("value", function (snapshot) {
                          console.log(Object.keys(snapshot.val())[0]);  // get UID ELEMNT
@@ -98,19 +110,17 @@
                                  Protine: '100g'
  
                              })
-                             // window.location.href = "CoachPage.html"
-                             // console.log('Coach');
                          });
                      })*/
 
-                     /*get the UID by orderr*/
+                    /*get the UID by orderr*/
 
-                    testCI.orderByChild('Email').equalTo($("#email").val()).on("value", function (snapshot) {
-                        snapshot.forEach(function (data) {
-                            /*From Here if yes go to CLIENT page*/
-                            console.log('CLIENT');
-                        });
-                    })
+                    /* testCI.orderByChild('Email').equalTo($("#email").val()).on("value", function (snapshot) {
+                         snapshot.forEach(function (data) {
+                             //From Here if yes go to CLIENT page
+                             console.log('CLIENT');
+                         });
+                     })*/
 
                 })
                     .catch(function (error) {
