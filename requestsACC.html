@@ -34,7 +34,93 @@
 <body>
     <script>
         $(document).ready(function () {
+            var g = 0
+            firebase.auth().onAuthStateChanged(function (user) {
+                var currUID = firebase.auth().currentUser.uid;
+                var newClientREF = databaseRef.child('Coach/' + currUID + "/New Client requests")
+                var uidREF = databaseRef.child('Coach/' + currUID)
+                var clientsREF = databaseRef.child('Client/')
+                newClientREF.on("value", function (newClients) {
+                    var optionsAsString = ""
+                    var uidN = []
+                    var j = 0;
+                    for (var i = 0; i < Object.keys(newClients.val()).length; i++) {
+                        if (newClients.val()[Object.keys(newClients.val())[i]]["Status"] == "FALSE") {
+                            uidN[j] = Object.keys(newClients.val())[i]
+                            j++;
+                        }
+                    }
+                    clientsREF.on("value", function (Clients) {
+                        var CUID = ""
+
+                        if (g == 0) {
+                            for (var i = 0; i < uidN.length; i++) {
+                                CUID = uidN[i];
+                                optionsAsString += "<tr  id='" + "Client" + [i] + "'> <td >" + Clients.val()[CUID]["Username"] + "</td><td>" + Clients.val()[CUID]["Email"] + "</td> </td><td>" + Clients.val()[CUID]["Age"] + "</td><td><button data-id='" + CUID + "'> ADD </button></td></tr> ";
+                            }
+                            $("#newClients").append(optionsAsString);
+                            optionsAsString = ""
+                            g++
+                        }
+                    }, function (errorObject) {
+                        console.log("The read failed: " + errorObject.code);
+                    })
+
+
+                }, function (errorObject) {
+                    console.log("The read failed: " + errorObject.code);
+                });
+                //CHANGE STATUS TO TRUE (ADD CLIENT)
+                $(document).on("click", "button", function (e) {
+                    var clientUID = $(this).attr('data-id');
+                    newClientREF.child(clientUID).set({
+                        Status: "TRUE"
+                    }).then(() => {
+                        var age = ""
+                        var email = ""
+                        var hight = ""
+                        var username = ""
+                        var weight = ""
+                        clientsREF.on("value", function (ClientGet) {
+                            age = ClientGet.val()[clientUID]["Age"]
+                            email = ClientGet.val()[clientUID]["Email"]
+                            hight = ClientGet.val()[clientUID]["Hight"]
+                            username = ClientGet.val()[clientUID]["Username"]
+                            weight = ClientGet.val()[clientUID]["Weight"]
+                        }, function (errorObject) {
+                            console.log("The read failed: " + errorObject.code);
+                        })
+
+                        /*After ACCEPTED new client */
+                        uidREF.child("Your Clients/"+clientUID)
+                            .set({
+                                Username: username,
+                                Email: email,
+                                Hight: hight,
+                                Weight: weight,
+                                Age: age,
+                            });
+                        /*Add the request to selected Coach */
+
+                    });
+                    $(this).text('ADDED');
+                    $(this).prop('disabled', true)
+                });
+
+            })
+
         })
     </script>
+
+    <p align="middle">Clients Requests</p>
+    <table id="newClients">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Age</th>
+            <th>Add To Your Clients</th>
+        </tr>
+    </table>
+
 
 </body>

@@ -1,135 +1,22 @@
-<head>
-    <link rel="stylesheet" href="CoachPage.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <!-- The core Firebase JS SDK is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-storage.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/6.6.2/firebase-auth.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/6.6.2/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-database.js"></script>
-
-    <!-- TODO: Add SDKs for Firebase products that you want to use
-         https://firebase.google.com/docs/web/setup#available-libraries -->
-
-    <script>
-        // Your web app's Firebase configuration
-        var firebaseConfig = {
-            apiKey: "AIzaSyCCkeCglasI9cz9KSrfgiTCMOzdgHNYhQM",
-            authDomain: "webproject-66098.firebaseapp.com",
-            databaseURL: "https://webproject-66098.firebaseio.com",
-            projectId: "webproject-66098",
-            storageBucket: "webproject-66098.appspot.com",
-            messagingSenderId: "578047006972",
-            appId: "1:578047006972:web:2fd6446310af9e46fc1f79",
-            measurementId: "G-VK41Q22SD9"
-        };
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        var storageRef = firebase.storage().ref();
-        var databaseRef = firebase.database().ref();
-    </script>
-
-</head>
-
-<body>
-    <script>
-        $(document).ready(function () {
-            firebase.auth().onAuthStateChanged(function (user) {
-                var x;
-                var currUID = firebase.auth().currentUser.uid;
-                if (user) {
-                    var child = storageRef.child('users-images/' + user.email + '');
-                    child.getDownloadURL().then(function (url) {
-                        document.getElementById("prof").src = url;
-                    });
-                    databaseRef.child('Coach/' + currUID).on("value", function (snapshot) {
-                        $("#user-email").html(snapshot.val()["Username"]);
-                    }, function (errorObject) {
-                        console.log("The read failed: " + errorObject.code);
-                    });
-                    //Clients Request Button
-                    databaseRef.child('Coach/' + currUID + "/New Client requests").on("value", function (snapshot) {
-                        var name = ""
-                        var uidN = ""
-                        var counter = 0
-                        for (var i = 0; i < Object.keys(snapshot.val()).length; i++) {
-                            uidN = Object.keys(snapshot.val())[i]
-                            if (snapshot.val()[uidN]["Status"] == "FALSE") {
-                                counter++;
-                            }
-                        }
-                        if(counter > 99){
-                            $("#requestcounter").text(counter + "+")
-                        }
-                        else{
-                            $("#requestcounter").text(counter);
-                        }
-                    }, function (errorObject) {
-                        console.log("The read failed: " + errorObject.code);
-                    });
-
-                    //After Client request Accept 
-                    databaseRef.child('Coach/' + currUID + "/Clients").on("value", function (snapshot) {
-                        var name = ""
-                        var uidN = ""
-                        var optionsAsString = ""
-                        for (var i = 0; i < Object.keys(snapshot.val()).length; i++) {
-                            uidN = Object.keys(snapshot.val())[i]
-                            optionsAsString += "<tr data-id='" + uidN + "' id='" + "Client" + [i] + "'> <td >" + snapshot.val()[uidN]["Username"] + "</td><td>" + snapshot.val()[uidN]["Email"] + "</td> </td><td>" + snapshot.val()[uidN]["Age"] + "</td></tr> ";
-                        }
-                        $("#Clients").append(optionsAsString);
-                        optionsAsString = ""
-
-                    }, function (errorObject) {
-                        console.log("The read failed: " + errorObject.code);
-                    });
-
-                } else {
-                    alert("TL7s tizi msh zabt")
-                }
-            });
-            //TABLE CLICK
-            $(document).on("click", "tr", function (e) { e
-                console.log($(this).attr('data-id')); // THIS HOW TO GET UID OF CLICKED ELEMT
-            });
-            //REQUESTS BUTTON
-            $("#requestBtn").click(() => {
-                document.location.href = "LoginPage.html"
-            })
-            //SIGN OUT BUTTON 
-            $("#sgn-out").click(() => {
-                firebase.auth().signOut().then(function () {
-                    document.location.href = "LoginPage.html"
-                }).catch(function (error) {
-                    console.log(error);
-                });
-            })
-
-
-
-        });
-    </script>
-
-    <div class="Toolbar">
-        <div>
-            <img class="imggg" id="prof" src="" alt="">
-            <label class="use-acc" id="user-email"></label>
-            <button id="requestBtn" class="notification">
-                Requests
-                <span class="badge" id="requestcounter" ></span>
-            </button>
-            <button class="sgnout-btn" id="sgn-out">Sign out</button>
-
-        </div>
-        <p align="middle">A right-aligned paragraph.</p>
-        <table id="Clients">
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Age</th>
-            </tr>
-        </table>
-
-</body>
-
-</html>
+#newClients {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #newClients td, #Clients th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #newClients tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #newClients tr:hover {background-color: #ddd;}
+  
+  #newClients th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+  }

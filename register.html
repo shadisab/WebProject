@@ -42,10 +42,10 @@
             /*Retrive the coachs from database by name*/
             $("#Mselect").click(() => {
                 if ($("#Mselect").val() == "Client") {
-                    $("#coachChooseDiv").show() 
-                    $("#HightDIV").show()
-                    $("#WeightDIV").show()
-                    $("#AgeDIV").show()
+                    $("#coachChooseDiv").show(1000) 
+                    $("#HightDIV").show(1000)
+                    $("#WeightDIV").show(1000)
+                    $("#AgeDIV").show(1000)
                     if (i == 0) {
                         var root = firebase.database().ref();
                         var testCo = root.child('Coach');
@@ -64,10 +64,10 @@
                     } i++;
                 }
                 if ($("#Mselect").val() == "Coach") { //Hide NOT fields required Coach 
-                    $("#coachChooseDiv").hide()
-                    $("#HightDIV").hide()
-                    $("#WeightDIV").hide()
-                    $("#AgeDIV").hide()
+                    $("#coachChooseDiv").hide(1000)
+                    $("#HightDIV").hide(1000)
+                    $("#WeightDIV").hide(1000)
+                    $("#AgeDIV").hide(1000)
                 }
             })
             /*************************************/
@@ -103,18 +103,6 @@
                                     Weight: $("#Weight").val(),
                                     Age:$("#Age").val(),
                                 });
-                            /*After ACCEPTED new client */
-                       /*  firebase
-                                .database()
-                                .ref('Coach/' + $("#Cselect").val() + '/' + 'Clients/' + UID + '/')
-                                .set({
-                                    Username: $("#name").val(),
-                                    Email: $("#mail").val(),
-                                    Hight: $("#Hight").val(),
-                                    Weight: $("#Weight").val(),
-                                    Age:$("#Age").val(),
-                                });*/
-                                /*Add the request to selected Coach */
                                 firebase
                                 .database()
                                 .ref('Coach/' + $("#Cselect").val() + '/' + 'New Client requests/' + UID + '/')
@@ -135,7 +123,7 @@
                         console.log(error)
                     })
                         .then(() => {
-                            var userImageRef = storageRef.child('users-images/' + $("#mail").val());
+                            var userImageRef = storageRef.child('users-images/' + $("#mail").val().toLowerCase());
                             userImageRef.put(file).then(alert("Register complet"))
                         }).catch(function (error) {
                             console.log(error.code);
@@ -270,7 +258,6 @@
                                 placeholder="Enter your Age" value="0">
                             <span class="focus-input100"></span>
                         </div>
-
                     <div class="container-login100-form-btn m-t-52">
                         <div id="lgnbtnSubmit" class="wrap-login100-form-btn">
                             <div class="login100-form-bgbtn"></div>

@@ -91,26 +91,23 @@
     width:200px;
 }
 
-/**********************TABLE***************************/
-#Clients {
+/**********************nutrition TABLE***************************/
+#nutritionTBL {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
-    
     text-align: center;
-
+  
   }
   
-  #Clients td, #Clients th {
+  #nutritionTBL td, #nutritionTBL th {
     border: 1px solid #ddd;
     padding: 8px;
   }
   
-  #Clients tr:nth-child(even){background-color: #f2f2f2;}
+  #nutritionTBL tr:nth-child(even){background-color: #f2f2f2;}
   
-  #Clients tr:hover {background-color: #ddd;}
-  
-  #Clients th {
+  #nutritionTBL th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: center;
@@ -118,3 +115,89 @@
     color: white;
   }
   /***********************************************************/
+  
+  /**********************WEEK TABLE***************************/
+  #Week {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+    padding-right: 100;
+    padding-left: 100;
+  }
+  
+  #Week td, #Week th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #Week tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #Week th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  /**********************Check TABLE***************************/
+  #CheckTB {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+    padding-right: 100;
+    padding-left: 100;
+  }
+  
+  #CheckTB td, #CheckTB th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #CheckTB th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+  }
+  /***********************************************************/
+  .mt-100 {
+    margin-top: 100 !important;
+  }
+  /**************Image*****************/
+  .imgggCHECK {
+    width: 50;
+    height: 50;
+    border-radius: 10%;
+    margin: 20;
+    transition: transform 0.9s;
+  }
+  .imgggCHECK:hover {
+    -ms-transform: scale(3.5); /* IE 9 */
+    -webkit-transform: scale(3.5); /* Safari 3-8 */
+    transform: scale(3.5); 
+  }
+  
+  /******************************/
+  div.ex1 {
+    width:500px;
+    margin: auto;
+    border-radius: 5px;
+  }
+  /***********************/
+  #protine {
+    width: 3em;
+  }
+  #carbohydrates {
+    width: 3em;
+  }
+  #fats {
+    width: 3em;
+  }
+  /************exercises*************/
+  .exercises {
+    color: #4CAF50;
+  }

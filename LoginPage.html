@@ -98,30 +98,9 @@
 
                     testCI.once('value', function (snapshot) {
                         if (snapshot.hasChild(firebase.auth().currentUser.uid)) {
-                            alert('exists');
+                            window.location.href = "ClientPage.html"
                         }
                     });
-                    /*upadte specific UID*/
-                    /* testCo.orderByChild('Email').equalTo($("#email").val()).on("value", function (snapshot) {
-                         console.log(Object.keys(snapshot.val())[0]);  // get UID ELEMNT
-                         snapshot.forEach(function (data) {
-                             console.log(data.val());
-                             testCo.child(firebase.auth().currentUser.uid +'/'+ 'Clienst/' + 'ps').set({
-                                 Protine: '100g'
- 
-                             })
-                         });
-                     })*/
-
-                    /*get the UID by orderr*/
-
-                    /* testCI.orderByChild('Email').equalTo($("#email").val()).on("value", function (snapshot) {
-                         snapshot.forEach(function (data) {
-                             //From Here if yes go to CLIENT page
-                             console.log('CLIENT');
-                         });
-                     })*/
-
                 })
                     .catch(function (error) {
                         var errorCode = error.code;
