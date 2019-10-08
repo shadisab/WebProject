@@ -37,16 +37,46 @@
 <body>
     <script>
 
-        function diff_years(dt2, dt1) {
+        function diff_years(dt2) {
+            dt1 = new Date();
+            dt3 = new Date(dt2);
+            var dd = dt1.getDate();
+            var mm = dt1.getMonth() + 1;
 
-            var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+            var yyyy = dt1.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+            var today = yyyy + '-' + mm + '-' + dd;
+            dt1 = new Date(today);
+            
+            var diff = (dt1.getTime() - dt3.getTime()) / 1000;
             diff /= (60 * 60 * 24);
             return Math.floor(((diff / 365.25)));
-
         }
+        function todaydate(){
+            dt1 = new Date();
+            var dd = dt1.getDate();
+            var mm = dt1.getMonth() + 1;
+
+            var yyyy = dt1.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+            var today = yyyy + '-' + mm + '-' + dd;
+            return(today);
+        }
+
         $(document).ready(function () {
             var i = 0;
-
+            var dateJoined = todaydate();
+            
             /*Retrive the coachs from database by name*/
             $("#Mselect").click(() => {
                 if ($("#Mselect").val() == "Client") {
@@ -55,6 +85,8 @@
                     $("#HightDIV").show(1000)
                     $("#WeightDIV").show(1000)
                     $("#AgeDIV").show(1000)
+                    $("#BodyPicDIV").show(1000)
+                    
                     if (i == 0) {
                         var root = firebase.database().ref();
                         var testCo = root.child('Coach');
@@ -78,6 +110,7 @@
                     $("#HightDIV").hide(1000)
                     $("#WeightDIV").hide(1000)
                     $("#AgeDIV").hide(1000)
+                    $("#BodyPicDIV").hide(1000)
                 }
             })
             /*************************************/
@@ -111,27 +144,30 @@
 
             $("#sign-up-btn").click(() => {
                 if (checkValidation()) {
+                   var age = diff_years($("#DateOfBirth").val());
                     firebase.auth().createUserWithEmailAndPassword($("#mail").val(), $("#pass").val()).then(function () {
                         var UID = firebase.auth().currentUser.uid;
                         if ($("#Mselect").val() == "Client") {
-                            firebase
-                                .database()
-                                .ref($("#Mselect").val() + '/' + UID)
-                                .set({
-                                    Username: $("#name").val(),
-                                    Email: $("#mail").val(),
-                                    Coach: $("#Cselect").val(), //UID OF THE COACH 
-                                    Hight: $("#Hight").val(),
-                                    Weight: $("#Weight").val(),
-                                    Age: $("#Age").val(),
-                                    Goal: $("#Gselect").val(),
-                                });
-                            firebase
-                                .database()
-                                .ref('Coach/' + $("#Cselect").val() + '/' + 'New Client requests/' + UID + '/')
-                                .set({
-                                    Status: "FALSE",
-                                });
+                                 firebase
+                                     .database()
+                                     .ref($("#Mselect").val() + '/' + UID)
+                                     .set({
+                                         Username: $("#name").val(),
+                                         Email: $("#mail").val(),
+                                         Coach: $("#Cselect").val(), //UID OF THE COACH 
+                                         Hight: $("#Hight").val(),
+                                         Weight: $("#Weight").val(),
+                                         Age: age,
+                                         Goal: $("#Gselect").val(),
+                                         "Date of Birth": $("#DateOfBirth").val() ,
+                                         "Date Joined": dateJoined,
+                                     });
+                                 firebase
+                                     .database()
+                                     .ref('Coach/' + $("#Cselect").val() + '/' + 'New Client requests/' + UID + '/')
+                                     .set({
+                                         Status: "FALSE",
+                                     });
                         }
                         if ($("#Mselect").val() == "Coach") {
                             firebase
@@ -159,6 +195,7 @@
             /*Go Back Button*/
             $("#cancelbtnSubmit").click(function () {
                 window.location.href = "LoginPage.html";
+
             });
             /*************************************/
 
@@ -184,8 +221,8 @@
                     alert(" Hight is required");
                     return false;
                 }
-                if ($.isNumeric($("#Age").val()) && ($("#Age").val() < 18) && $("#Mselect").val() != 'Coach') {
-                    alert(" Age most be bigger then 18");
+                if( $("#DateOfBirth").val() == null  && $("#Mselect").val() != 'Coach'){
+                    alert(" Date Of Birth is required");
                     return false;
                 }
                 if ($.isNumeric($("#Weight").val()) && ($("#Hight").val() == 0) && $("#Mselect").val() != 'Coach') {
@@ -207,6 +244,10 @@
                 }
                 if (!$("#Bodyimag").val()) {
                     alert("You Must Enter a Photo of your body");
+                    return false;
+                }
+                if(diff_years($("#DateOfBirth").val()) < 18 && $("#Mselect").val() != 'Coach'){
+                    alert(" Age most be bigger then 18");
                     return false;
                 }
                 return true;
@@ -300,11 +341,12 @@
 
                     <div class="wrap-input100 validate-input m-b-23" id="AgeDIV">
                         <span class="label-input100">Date of Birth</span>
-                        <input class="input100" id="Age" type="date" name="Age" placeholder="Enter your Age" value="0">
+                        <input class="input100" id="DateOfBirth" type="date" name="Age"
+                            placeholder="Enter Date of Birth" >
                         <span class="focus-input100"></span>
                     </div>
 
-                    <div class="wrap-input100 validate-input m-b-23">
+                    <div class="wrap-input100 validate-input m-b-23" id="BodyPicDIV">
                         <span class="bodyimg-form-title p-b-20">
                             let your coach see your current body.
                         </span>

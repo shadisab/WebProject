@@ -151,7 +151,7 @@
 }
 
 #nutritionTBL tr:nth-child(even){background-color: #f2f2f2;}
-
+#nutritionTBL tr:nth-child(odd){background-color: white;}
 #nutritionTBL th {
   padding-top: 12px;
   padding-bottom: 12px;
@@ -177,7 +177,7 @@
 }
 
 #Week tr:nth-child(even){background-color: #f2f2f2;}
-
+#Week tr:nth-child(odd){background-color: white;}
 #Week th {
   padding-top: 12px;
   padding-bottom: 12px;
@@ -200,6 +200,8 @@
   border: 1px solid #ddd;
   padding: 8px;
 }
+#CheckTB tr:nth-child(even){background-color: #f2f2f2;}
+#CheckTB tr:nth-child(odd){background-color: white;}
 
 #CheckTB th {
   padding-top: 12px;

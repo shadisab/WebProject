@@ -108,6 +108,7 @@
   }
   
   #Clients tr:nth-child(even){background-color: #f2f2f2;}
+  #Clients tr:nth-child(odd){background-color: white;}
   
   #Clients tr:hover {background-color: #ddd;}
   

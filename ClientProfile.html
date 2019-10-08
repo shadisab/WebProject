@@ -1,0 +1,100 @@
+<head>
+    <link rel="stylesheet" href="ClientProfile.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-storage.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/6.6.2/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/6.6.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-database.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+                 https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyCCkeCglasI9cz9KSrfgiTCMOzdgHNYhQM",
+            authDomain: "webproject-66098.firebaseapp.com",
+            databaseURL: "https://webproject-66098.firebaseio.com",
+            projectId: "webproject-66098",
+            storageBucket: "webproject-66098.appspot.com",
+            messagingSenderId: "578047006972",
+            appId: "1:578047006972:web:2fd6446310af9e46fc1f79",
+            measurementId: "G-VK41Q22SD9"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var storageRef = firebase.storage().ref();
+        var databaseRef = firebase.database().ref();
+    </script>
+
+</head>
+
+<body >
+    <script>
+         function diff_years(dt2) {
+            dt1 = new Date();
+            dt3 = new Date(dt2);
+            var dd = dt1.getDate();
+            var mm = dt1.getMonth() + 1;
+            var yyyy = dt1.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+            var today = yyyy + '-' + mm + '-' + dd;
+            dt1 = new Date(today);
+            var diff = (dt1.getTime() - dt3.getTime()) / 1000;
+            diff /= (60 * 60 * 24);
+            return Math.floor(((diff / 365.25)));
+        }
+        $(document).ready(function () {
+           
+            firebase.auth().onAuthStateChanged(function (user) {
+                var ClientUID = localStorage.getItem('ClientUID')
+                var clientsREF = databaseRef.child('Client/')
+               
+              
+                
+                //RETRIVE Client Name AND NUTRIONS
+                clientsREF.child(ClientUID).on("value", function (Client) {
+                    
+                    var child = storageRef.child('users-images/' + Client.val()["Email"] + '');
+                    child.getDownloadURL().then(function (url) {
+                        document.getElementById("prof").src = url;
+                    });
+
+                    var age = diff_years(Client.val()["Date of Birth"])
+                    $("#userName").html(Client.val()["Username"])
+                    $("#DateJoined").html("Date Joined: " + Client.val()["Date Joined"])
+                    $("#Email").html("Email: "+Client.val()["Email"])
+                    $("#AGE").html("Age: "+age)
+                    $("#currentWeight").html("Current Weight: "+Client.val()["Weight"]+"KG")
+                    $("#Hight").html("Hight: "+Client.val()["Hight"]+"CM")
+                })
+                $("#butBack").click(()=>{
+                    window.location.href = "CheckClient.html";
+                })
+            })
+        })
+    </script>
+
+    <h2 style="text-align:center"></h2>
+
+    <div class="card">
+        <img src="profilecard.jpg"  style="width:100%" id="prof" >  
+        <h1 id="userName"></h1>
+        <p id="DateJoined"></p>
+        <p id="Email"></p>
+        <p id="AGE"></p>
+        <p id="currentWeight"></p>
+        <P id="Hight"></p>
+        <button id="butBack">Back to Client Work</button>
+    </div>
+
+
+
+</body>

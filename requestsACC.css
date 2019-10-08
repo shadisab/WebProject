@@ -10,7 +10,7 @@
   }
   
   #newClients tr:nth-child(even){background-color: #f2f2f2;}
-  
+  #newClients tr:nth-child(odd){background-color: white;}
 
   
   #newClients th {
