@@ -41,81 +41,119 @@
             firebase.auth().onAuthStateChanged(function (user) {
                 var x;
                 var currUID = firebase.auth().currentUser.uid;
+                var uidREF = databaseRef.child('Client/' + currUID)
+                var coachREF = databaseRef.child('Coach/')
+                var coachUID = ""
+                var ClientEmail = user.email + "/";
+                var photosBodyCount = 0;
                 if (user) {
+                    //Profile IMAGE
                     var child = storageRef.child('users-images/' + user.email + '');
                     child.getDownloadURL().then(function (url) {
                         document.getElementById("prof").src = url;
                     });
-                    databaseRef.child('Coach/' + currUID).on("value", function (snapshot) {
-                        $("#user-email").html(snapshot.val()["Username"]);
-                    }, function (errorObject) {
-                        console.log("The read failed: " + errorObject.code);
-                    });
-                    //Clients Request Button
-                    databaseRef.child('Coach/' + currUID + "/New Client requests").on("value", function (snapshot) {
-                        var name = ""
-                        var uidN = ""
-                        var counter = 0
-                        if (snapshot.val() != null) {
-                            for (var i = 0; i < Object.keys(snapshot.val()).length; i++) {
-                                uidN = Object.keys(snapshot.val())[i]
-                                if (snapshot.val()[uidN]["Status"] == "FALSE") {
-                                    counter++;
-                                }
-                            }
-                            if (counter > 99) {
-                                $("#requestcounter").text(counter + "+")
-                            }
-                            else {
-                                $("#requestcounter").text(counter);
-                            }
-                        }
-                    }, function (errorObject) {
-                        console.log("The read failed: " + errorObject.code);
-                    });
-
-                    //After Client request Accept 
-                    databaseRef.child('Coach/' + currUID + "/Your Clients").on("value", function (snapshot) {
-                        var name = ""
-                        var uidN = ""
-                        var optionsAsString = ""
-                        if (snapshot.val() != null) {
-                            for (var i = 0; i < Object.keys(snapshot.val()).length; i++) {
-                                uidN = Object.keys(snapshot.val())[i]
-                                optionsAsString += "<tr Client" + [i] + "'> <td >" + snapshot.val()[uidN]["Username"] + "</td><td>" + snapshot.val()[uidN]["Email"] + "</td> </td><td>" + snapshot.val()[uidN]["Age"] + "</td><td><button data-id='" + uidN + "'> Check it </button></td></tr> ";
-                            }
-                            $("#Clients").append(optionsAsString);
-                            optionsAsString = ""
-                        }
-
-                    }, function (errorObject) {
-                        console.log("The read failed: " + errorObject.code);
-                    });
-
-                } else {
-                    alert("TL7s tizi msh zabt")
                 }
-            });
-            //REQUESTS BUTTON
-            $("#requestBtn").click(() => {
-                document.location.href = "requestsACC.html"
-            })
-
-
-
-
-            //SIGN OUT BUTTON 
-            $("#sgn-out").click(() => {
-                firebase.auth().signOut().then(function () {
-                    document.location.href = "LoginPage.html"
-                }).catch(function (error) {
-                    console.log(error);
+                /*Add Body Image*/
+                var file;
+                $("#imagADD").change((e) => {
+                    
+                    file = e.target.files[0];
+                    var fr = new FileReader();
+                    fr.onload = function () {
+                        $("#asd123").attr("src",fr.result);  
+                    }
+                    fr.readAsDataURL(file);
                 });
+
+                //ADD BTN
+                $("#addBTN").click(()=>{
+                    var userBodyImageRef = storageRef.child(ClientEmail.toLocaleLowerCase() + "/" + photosBodyCount);
+                    userBodyImageRef.put(file).then(alert("Photo Body Add complet"))
+                })
+
+
+                //USER NAME
+                uidREF.on("value", function (snapshot) {
+                    $("#user-email").html(snapshot.val()["Username"]);
+                    coachUID = snapshot.val()["Coach"];
+
+                }, function (errorObject) {
+                    console.log("The read failed: " + errorObject.code);
+                });
+
+                //COACH NAME
+                coachREF.on("value", function (snapshot) {
+                    $("#CoachNameBTN").html("Coach: " + snapshot.val()[coachUID]["Username"]);
+                }, function (errorObject) {
+                    console.log("The read failed: " + errorObject.code);
+                });
+
+
+                //RETRIVE Client Name AND NUTRIONS
+                uidREF.on("value", function (Client) {
+                    $("#user-name").html("Client: " + Client.val()["Username"])
+                    if (Client.val()["Nutrition"] != null) {
+                        $("#protine").val(Client.val()["Nutrition"]["Protine"])
+                        $("#carbohydrates").val(Client.val()["Nutrition"]["Carbohydrates"])
+                        $("#fats").val(Client.val()["Nutrition"]["Fats"])
+                    }
+                })
+
+                //RETRIVE DATA OF WEEKLY WORKOUT
+                uidREF.child("/Weekly").on("value", function (Client) {
+                    if (Client.val() != null) {
+                        $("#SundayMG").val(Client.val()["Sunday"]["SundayMG"])
+                        $("#MondayMG").val(Client.val()["Monday"]["MondayMG"])
+                        $("#TuesdayMG").val(Client.val()["Tuesday"]["TuesdayMG"])
+                        $("#WednesdayMG").val(Client.val()["Wednesday"]["WednesdayMG"])
+                        $("#ThursdayMG").val(Client.val()["Thursday"]["ThursdayMG"])
+                        $("#FridayMG").val(Client.val()["Friday"]["FridayMG"])
+                        $("#SaturdayMG").val(Client.val()["Saturday"]["SaturdayMG"])
+                        $("#SundayEX").val(Client.val()["Sunday"]["SundayEX"])
+                        $("#MondayEX").val(Client.val()["Monday"]["MondayEX"])
+                        $("#TuesdayEX").val(Client.val()["Tuesday"]["TuesdayEX"])
+                        $("#WednesdayEX").val(Client.val()["Wednesday"]["WednesdayEX"])
+                        $("#ThursdayEX").val(Client.val()["Thursday"]["ThursdayEX"])
+                        $("#FridayEX").val(Client.val()["Friday"]["FridayEX"])
+                        $("#SaturdayEX").val(Client.val()["Saturday"]["SaturdayEX"])
+                    }
+
+                })
+
+                //RETRIVE CHEACK UPS IMAGES
+                //Create a reference under which you want to list
+                var listRef = storageRef.child(ClientEmail);
+                var imagesURL =""
+                // Find all the prefixes and items.
+                listRef.listAll().then(function (res) {
+                    photosBodyCount = res.items.length +1;
+                    res.items.forEach(function (itemRef) {
+                        itemRef.getDownloadURL().then(function (url) {
+                            imagesURL += "<img class='imgggCHECK' data-id='prof1' src=" + url + ">"
+                        }).then(function (url) {
+                            $("#checkupstableimage").append(imagesURL)
+                            imagesURL ="";
+
+                        })
+                    });
+                }).catch(function (error) {
+                    // Uh-oh, an error occurred!
+                });
+
             })
-
-
-
+               //SIGN OUT BUTTON 
+        $("#sgn-out").click(() => {
+            firebase.auth().signOut().then(function () {
+                document.location.href = "LoginPage.html"
+            }).catch(function (error) {
+                console.log(error);
+            });
+        })
         });
+     
+
+
+
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
@@ -129,8 +167,8 @@
         <div class="Toolbar">
             <img class="imggg" id="prof" src="" alt="">
             <label class="use-acc" id="user-email"></label>
-            <button id="requestBtn" class="notification">
-                Coach Name:
+            <button id="CoachNameBTN" class="CoachNameBTN">
+                Coach:
                 <span class="badge" id="requestcounter"></span>
             </button>
             <button class="sgnout-btn" id="sgn-out">Sign out</button>
@@ -151,48 +189,48 @@
             </tr>
             <tr>
                 <td>
-                    <p class="exercises">Muscle Group</p><input id="SundayMG" type="text" size="10">
+                    <p class="exercises">Muscle Group</p><input readonly id="SundayMG" type="text" size="10">
                 </td>
                 <td>
-                    <p class="exercises">Muscle Group</p><input id="MondayMG" type="text" size="10">
+                    <p class="exercises">Muscle Group</p><input readonly id="MondayMG" type="text" size="10">
                 </td>
                 <td>
-                    <p class="exercises">Muscle Group</p><input id="TuesdayMG" type="text" size="10">
+                    <p class="exercises">Muscle Group</p><input readonly id="TuesdayMG" type="text" size="10">
                 </td>
                 <td>
-                    <p class="exercises">Muscle Group</p><input id="WednesdayMG" type="text" size="10">
+                    <p class="exercises">Muscle Group</p><input readonly id="WednesdayMG" type="text" size="10">
                 </td>
                 <td>
-                    <p class="exercises">Muscle Group</p><input id="ThursdayMG" type="text" size="10">
+                    <p class="exercises">Muscle Group</p><input readonly id="ThursdayMG" type="text" size="10">
                 </td>
                 <td>
-                    <p class="exercises">Muscle Group</p><input id="FridayMG" type="text" size="10">
+                    <p class="exercises">Muscle Group</p><input readonly id="FridayMG" type="text" size="10">
                 </td>
                 <td>
-                    <p class="exercises">Muscle Group</p><input id="SaturdayMG" type="text" size="10">
+                    <p class="exercises">Muscle Group</p><input readonly id="SaturdayMG" type="text" size="10">
                 </td>
             </tr>
             <tr>
                 <td>
-                    <p class="exercises">exercises</p> <textarea id="SundayEX" rows="5" cols="10"></textarea>
+                    <p class="exercises">exercises</p> <textarea readonly id="SundayEX" rows="5" cols="10"></textarea>
                 </td>
                 <td>
-                    <p class="exercises">exercises</p><textarea id="MondayEX" rows="5" cols="10"></textarea>
+                    <p class="exercises">exercises</p><textarea readonly id="MondayEX" rows="5" cols="10"></textarea>
                 </td>
                 <td>
-                    <p class="exercises">exercises</p><textarea id="TuesdayEX" rows="5" cols="10"></textarea>
+                    <p class="exercises">exercises</p><textarea readonly id="TuesdayEX" rows="5" cols="10"></textarea>
                 </td>
                 <td>
-                    <p class="exercises">exercises</p><textarea id="WednesdayEX" rows="5" cols="10"></textarea>
+                    <p class="exercises">exercises</p><textarea readonly id="WednesdayEX" rows="5" cols="10"></textarea>
                 </td>
                 <td>
-                    <p class="exercises">exercises</p><textarea id="ThursdayEX" rows="5" cols="10"></textarea>
+                    <p class="exercises">exercises</p><textarea readonly id="ThursdayEX" rows="5" cols="10"></textarea>
                 </td>
                 <td>
-                    <p class="exercises">exercises</p><textarea id="FridayEX" rows="5" cols="10"></textarea>
+                    <p class="exercises">exercises</p><textarea readonly id="FridayEX" rows="5" cols="10"></textarea>
                 </td>
                 <td>
-                    <p class="exercises">exercises</p><textarea id="SaturdayEX" rows="5" cols="10"></textarea>
+                    <p class="exercises">exercises</p><textarea readonly id="SaturdayEX" rows="5" cols="10"></textarea>
                 </td>
             </tr>
             <tr>
@@ -202,7 +240,7 @@
                 <th></th>
                 <th></th>
                 <th></th>
-                <th><button id="workOutBTN">Click to update</button></th>
+                <th></th>
             </tr>
         </table>
         <div class="col-1"></div>
@@ -217,13 +255,12 @@
                 <th>Protine(g)</th>
                 <th>Carbohydrates(g)</th>
                 <th>Fats(g)</th>
-                <th>Click to update Client Nutrition</th>
+
             </tr>
             <tr>
-                <td> <input id="protine" type="number"> </td>
-                <td><input id="carbohydrates" type="number"> </td>
-                <td><input id="fats" type="number"> </td>
-                <th><button id="submitNutr">Submit</button></th>
+                <td> <input readonly id="protine" type="number"> </td>
+                <td><input readonly id="carbohydrates" type="number"> </td>
+                <td><input readonly id="fats" type="number"> </td>
             </tr>
         </table>
         <div class="col-2"></div>
@@ -236,28 +273,23 @@
                 <th>Check UPS Pictures</th>
             </tr>
             <tr>
-                <td> <button>Add Picture</button> </td>
+                <td>
+                    <!-- <label class="Addbtn"> Add Your next picture
+                        <input id="imagADD" type="file" size="60">
+                    </label> -->
+                    <label id="profile-pic">
+                            <img id="asd123" class="img-uplaoder" src="img_191958.png" >
+                            <input id="imagADD" type="file">
+                            </input>
+                        </label>
+                        <button id="addBTN">
+                            Add your new picture
+                        </button>
+                </td>
             </tr>
             <tr>
-                <td>
-                    <img class="imgggCHECK" data-id="prof1" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof2" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof3" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof4" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof5" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof6" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof7" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof8" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof9" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof10" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof11" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof11" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof11" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
+                <td id="checkupstableimage">
 
-                    <img class="imgggCHECK" data-id="prof11" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof11" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof11" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-                    <img class="imgggCHECK" data-id="prof11" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
                 </td>
             </tr>
         </table>

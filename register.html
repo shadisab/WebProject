@@ -36,13 +36,22 @@
 
 <body>
     <script>
+
+        function diff_years(dt2, dt1) {
+
+            var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+            diff /= (60 * 60 * 24);
+            return Math.floor(((diff / 365.25)));
+
+        }
         $(document).ready(function () {
             var i = 0;
-          
+
             /*Retrive the coachs from database by name*/
             $("#Mselect").click(() => {
                 if ($("#Mselect").val() == "Client") {
-                    $("#coachChooseDiv").show(1000) 
+                    $("#goalChooseDiv").show(1000)
+                    $("#coachChooseDiv").show(1000)
                     $("#HightDIV").show(1000)
                     $("#WeightDIV").show(1000)
                     $("#AgeDIV").show(1000)
@@ -64,6 +73,7 @@
                     } i++;
                 }
                 if ($("#Mselect").val() == "Coach") { //Hide NOT fields required Coach 
+                    $("#goalChooseDiv").hide(1000)
                     $("#coachChooseDiv").hide(1000)
                     $("#HightDIV").hide(1000)
                     $("#WeightDIV").hide(1000)
@@ -77,13 +87,25 @@
             var file;
             $("#imag").change((e) => {
                 file = e.target.files[0];
-                console.log(file);
                 var fr = new FileReader();
                 fr.onload = function () {
                     document.getElementById("asd123").src = fr.result;
                     // $("asd123").css("src", fr.result)
                 }
                 fr.readAsDataURL(file);
+            });
+            /*************************************/
+
+            /*Choose Body Image*/
+            var fileBody;
+            $("#Bodyimag").change((e) => {
+                fileBody = e.target.files[0];
+                var fr = new FileReader();
+                fr.onload = function () {
+                    document.getElementById("bimg").src = fr.result;
+                    // $("asd123").css("src", fr.result)
+                }
+                fr.readAsDataURL(fileBody);
             });
             /*************************************/
 
@@ -101,9 +123,10 @@
                                     Coach: $("#Cselect").val(), //UID OF THE COACH 
                                     Hight: $("#Hight").val(),
                                     Weight: $("#Weight").val(),
-                                    Age:$("#Age").val(),
+                                    Age: $("#Age").val(),
+                                    Goal: $("#Gselect").val(),
                                 });
-                                firebase
+                            firebase
                                 .database()
                                 .ref('Coach/' + $("#Cselect").val() + '/' + 'New Client requests/' + UID + '/')
                                 .set({
@@ -124,7 +147,9 @@
                     })
                         .then(() => {
                             var userImageRef = storageRef.child('users-images/' + $("#mail").val().toLowerCase());
-                            userImageRef.put(file).then(alert("Register complet"))
+                            var userBodyImageRef = storageRef.child($("#mail").val().toLowerCase() + "/" + "1");
+                            userImageRef.put(file).then(userBodyImageRef.put(fileBody).then(alert("Register complet")))
+
                         }).catch(function (error) {
                             console.log(error.code);
                         });
@@ -171,9 +196,17 @@
                     alert("You must Choose your Coach");
                     return false;
                 }
-                
+                if ($("#Gselect").val() == 'Choose' && $("#Mselect").val() != 'Coach') {
+                    alert("You must Choose your Goal");
+                    return false;
+                }
+
                 if (!$("#imag").val()) {
                     alert("You Must Enter a Photo");
+                    return false;
+                }
+                if (!$("#Bodyimag").val()) {
+                    alert("You Must Enter a Photo of your body");
                     return false;
                 }
                 return true;
@@ -231,12 +264,25 @@
                             <option value="Client">Client</option>
                         </select>
                     </div>
-                    <div class="wrap-input100 validate-input m-b-23" data-validate="Account type is required" id="coachChooseDiv">
+                    <div class="wrap-input100 validate-input m-b-23" data-validate="Account type is required"
+                        id="coachChooseDiv">
                         <span class="label-input100">Choose your coach</span>
                         <br>
                         </br>
                         <select id="Cselect">
                             <option id="CoachChoose" value="Choose" hidden="true">Choose</option>
+                        </select>
+                    </div>
+                    <div class="wrap-input100 validate-input m-b-23" data-validate="Account type is required"
+                        id="goalChooseDiv">
+                        <span class="label-input100">Choose your Goal</span>
+                        <br>
+                        </br>
+                        <select id="Gselect">
+                            <option id="GoalChoose" value="Choose" hidden="true">Choose</option>
+                            <option value="Bulking">Bulking</option>
+                            <option value="Lose Fats">Lose Fats</option>
+                            <option value="Strength Improvement">Strength Improvement</option>
                         </select>
                     </div>
                     <div class="wrap-input100 validate-input m-b-23" id="HightDIV">
@@ -253,11 +299,21 @@
                     </div>
 
                     <div class="wrap-input100 validate-input m-b-23" id="AgeDIV">
-                            <span class="label-input100">Age</span>
-                            <input class="input100" id="Age" type="number" name="Age"
-                                placeholder="Enter your Age" value="0">
-                            <span class="focus-input100"></span>
-                        </div>
+                        <span class="label-input100">Date of Birth</span>
+                        <input class="input100" id="Age" type="date" name="Age" placeholder="Enter your Age" value="0">
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input m-b-23">
+                        <span class="bodyimg-form-title p-b-20">
+                            let your coach see your current body.
+                        </span>
+                        <label id="body-pic">
+                            <img id="bimg" class="body-uplaoder" src="img_191958.png" alt="asd">
+                            <input id="Bodyimag" type="file">
+                            </input>
+                        </label>
+                    </div>
                     <div class="container-login100-form-btn m-t-52">
                         <div id="lgnbtnSubmit" class="wrap-login100-form-btn">
                             <div class="login100-form-bgbtn"></div>

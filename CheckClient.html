@@ -40,18 +40,20 @@
 
 <body>
 
+
   <script>
     $(document).ready(function () {
       firebase.auth().onAuthStateChanged(function (user) {
         var ClientUID = localStorage.getItem('ClientUID')
         var currUID = firebase.auth().currentUser.uid;
-        var newClientREF = databaseRef.child('Coach/' + currUID + "/New Client requests")
+        var ClientREF = databaseRef.child('Coach/' + currUID + "/Your Clients/" + ClientUID)
         var uidREF = databaseRef.child('Coach/' + currUID)
         var clientsREF = databaseRef.child('Client/')
 
         //RETRIVE Client Name AND NUTRIONS
         clientsREF.child(ClientUID).on("value", function (Client) {
           $("#user-name").html("Client: " + Client.val()["Username"])
+          $("#goal").html("Goal: " + Client.val()["Goal"])
           if (Client.val()["Nutrition"] != null) {
             $("#protine").val(Client.val()["Nutrition"]["Protine"])
             $("#carbohydrates").val(Client.val()["Nutrition"]["Carbohydrates"])
@@ -78,6 +80,35 @@
           }
 
         })
+
+        //RETRIVE Client EMAIL
+        var ClientEmail = ""
+        var imagesURL = ""
+        ClientREF.on("value", function (Client) {
+          ClientEmail = Client.val()["Email"] + "/"
+
+          //RETRIVE CHEACK UPS IMAGES
+          //Create a reference under which you want to list
+          var listRef = storageRef.child(ClientEmail);
+          // Find all the prefixes and items.
+          listRef.listAll().then(function (res) {
+            res.items.forEach(function (itemRef) {
+              itemRef.getDownloadURL().then(function (url) {
+                imagesURL += "<img class='imggg' data-id='prof1' src=" + url + ">"
+              }).then(function (url) {
+                console.log(imagesURL);
+                $("#checkupstableimage").append(imagesURL)
+                imagesURL = ""
+              })
+            });
+          }).catch(function (error) {
+            // Uh-oh, an error occurred!
+          });
+
+        })
+
+
+
 
         //ADD NUtritions to Client
         $("#submitNutr").click(() => {
@@ -123,11 +154,8 @@
           })
         })
 
-        //IMAGES
-        $(document).on("click", "img", function (e) {
-          console.log($(this).attr('data-id'));
 
-        });
+
 
       })
 
@@ -147,6 +175,11 @@
         window.location.href = "CoachPage.html";
       })
 
+      $("#user-name").click(() => {
+        window.location.href = "CoachPage.html";
+      })
+
+
     })
 
 
@@ -160,18 +193,23 @@
     crossorigin="anonymous"></script>
 
   <!-- NAV BAR -->
-  <header class="row">
+  <header class="container-fluid">
     <div class="Toolbar">
       <div class="col-2">
-        <label class="use-name" id="user-name"> </label>
+        <label class="use-name" id="user-name">
+          
+        </label>
       </div>
-      <div class="col-3">
+      <div class="col-2">
+        <label class="goal" id="goal"></label>
+      </div>
+      <div class="col-2">
         <button class="nutrition" id="nutrition">
           daily nutrition
         </button>
       </div>
 
-      <div class="col-3">
+      <div class="col-2">
         <button class="weekly" id="weekly">
           weekly Work out
         </button>
@@ -183,7 +221,7 @@
       </div>
 
       <div class="col-1">
-        <button class="goBack" id="goBack">Go back</button>
+        <button class="goBack" id="goBack" style='font-size:50px;'>&#8680;</button>
       </div>
   </header>
   </div>
@@ -287,25 +325,7 @@
         <th>Check UPS Pictures</th>
       </tr>
       <tr>
-        <td>
-          <img class="imggg" data-id="prof1" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof2" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof3" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof4" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof5" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof6" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof7" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof8" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof9" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof10" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof11" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof11" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof11" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-
-          <img class="imggg" data-id="prof11" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof11" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof11" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
-          <img class="imggg" data-id="prof11" src="d:\Users\SHADI\Pictures\4K\4457.jpg" alt="">
+        <td id="checkupstableimage">
         </td>
       </tr>
     </table>

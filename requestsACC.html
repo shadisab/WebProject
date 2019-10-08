@@ -56,7 +56,7 @@
                         if (g == 0) {
                             for (var i = 0; i < uidN.length; i++) {
                                 CUID = uidN[i];
-                                optionsAsString += "<tr  id='" + "Client" + [i] + "'> <td >" + Clients.val()[CUID]["Username"] + "</td><td>" + Clients.val()[CUID]["Email"] + "</td> </td><td>" + Clients.val()[CUID]["Age"] + "</td><td><button data-id='" + CUID + "'> ADD </button></td></tr> ";
+                                optionsAsString += "<tr  id='" + "Client" + [i] + "'> <td >" + Clients.val()[CUID]["Username"] + "</td><td>" + Clients.val()[CUID]["Email"] + "</td> </td><td>" + Clients.val()[CUID]["Age"] + Clients.val()[CUID]["Email"] + "</td> </td><td>" + Clients.val()[CUID]["Goal"] + "</td><td><button class='example_b' data-id='" + CUID + "'> ADD </button></td></tr> ";
                             }
                             $("#newClients").append(optionsAsString);
                             optionsAsString = ""
@@ -87,12 +87,13 @@
                             hight = ClientGet.val()[clientUID]["Hight"]
                             username = ClientGet.val()[clientUID]["Username"]
                             weight = ClientGet.val()[clientUID]["Weight"]
+
                         }, function (errorObject) {
                             console.log("The read failed: " + errorObject.code);
                         })
 
                         /*After ACCEPTED new client */
-                        uidREF.child("Your Clients/"+clientUID)
+                        uidREF.child("Your Clients/" + clientUID)
                             .set({
                                 Username: username,
                                 Email: email,
@@ -118,9 +119,12 @@
             <th>Name</th>
             <th>Email</th>
             <th>Age</th>
+            <th>Goal</th>
             <th>Add To Your Clients</th>
         </tr>
     </table>
+
+    <div  align="center"><a class="example_f" href="CoachPage.html" target="_blank" rel="nofollow"><span>Home Page</a></div>
 
 
 </body>

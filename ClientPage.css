@@ -7,6 +7,8 @@
     height: 7%;
     width: 100%;
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    min-height: 50px;
+  min-width: 1000px;
 }
 .imggg{
     width:3.1%;
@@ -24,11 +26,11 @@
     margin-top: 7.5px;
     margin-right: 10px;
 }
-/*notification button*/
-.notification {
+/*CoachName button*/
+.CoachNameBTN {
     background-color: #00dbde;
     font-family: Poppins-Medium;
-    width:120px;
+    width:200px;
     height: 100%;
     margin-right: 40;
     float: right;
@@ -40,17 +42,16 @@
     
   }
   
-  .notification:hover {
+  .CoachNameBTN:hover {
     background-color: rgb(173, 10, 152);
     color: rgb(9, 253, 253);
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-    width:200px;
     -webkit-transition-duration: 0.4s;
     transition-duration: 0.4s;
     
   }
   
-  .notification .badge {
+  .CoachNameBTN .badge {
     float: right;
     width: 20;
     height: 30;
@@ -201,3 +202,29 @@
   .exercises {
     color: #4CAF50;
   }
+
+/***************************************/
+.profile-pic{
+    opacity: 1;
+    border: none;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    background-size: cover;
+    transition: .5s ease;
+    cursor:pointer;
+  }
+  .img-uplaoder{
+    opacity: 1;
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    transition: .5s ease;
+    cursor:pointer;
+  }
+  input[type="file"] {
+    display: none;
+}
