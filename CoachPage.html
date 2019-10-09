@@ -82,7 +82,7 @@
                         if (snapshot.val() != null) {
                             for (var i = 0; i < Object.keys(snapshot.val()).length; i++) {
                                 uidN = Object.keys(snapshot.val())[i]
-                                optionsAsString += "<tr Client" + [i] + "'> <td >" + snapshot.val()[uidN]["Username"] + "</td><td>" + snapshot.val()[uidN]["Email"] + "</td> </td><td>" + snapshot.val()[uidN]["Age"] + "</td><td><button data-id='" + uidN + "'> Check it </button></td></tr> ";
+                                optionsAsString += "<tr Client" + [i] + "'> <td >" + snapshot.val()[uidN]["Username"] + "</td><td>" + snapshot.val()[uidN]["Email"] + "</td> </td><td>" + snapshot.val()[uidN]["Age"] + "</td><td><button class='example_b' data-id='" + uidN + "'> Check it </button></td></tr> ";
                             }
                             $("#Clients").append(optionsAsString);
                             optionsAsString = ""
