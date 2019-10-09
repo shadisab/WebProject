@@ -54,9 +54,9 @@
                         var CUID = ""
 
                         if (g == 0) {
-                            for (var i = 0; i < uidN.length; i++) {
+                            for (var i = 0; i < uidN.length; i++) {//New Clients Table Build
                                 CUID = uidN[i];
-                                optionsAsString += "<tr  id='" + "Client" + [i] + "'> <td >" + Clients.val()[CUID]["Username"] + "</td><td>" + Clients.val()[CUID]["Email"] + "</td> </td><td>" + Clients.val()[CUID]["Age"] + Clients.val()[CUID]["Email"] + "</td> </td><td>" + Clients.val()[CUID]["Goal"] + "</td><td><button class='example_b' data-id='" + CUID + "'> ADD </button></td></tr> ";
+                                optionsAsString += "<tr  id='" + "Client" + [i] + "'> <td >" + Clients.val()[CUID]["Username"] + "</td><td>" + Clients.val()[CUID]["Email"] + "</td> </td><td>" + Clients.val()[CUID]["Age"] +   "</td> </td><td>" + Clients.val()[CUID]["Goal"] + "</td><td><button class='example_b' data-id='" + CUID + "'> ADD </button></td></tr> ";
                             }
                             $("#newClients").append(optionsAsString);
                             optionsAsString = ""
@@ -106,7 +106,12 @@
                     });
                     $(this).text('ADDED');
                     $(this).prop('disabled', true)
+               
                 });
+
+                $("#backBTN").click(()=>{
+                    document.location.href = "CoachPage.html"
+                })
 
             })
 
@@ -124,7 +129,7 @@
         </tr>
     </table>
 
-    <div  align="center"><a class="example_f" href="CoachPage.html" target="_blank" rel="nofollow"><span>Home Page</a></div>
+    <div  align="center"><a id = "backBTN" class="example_f"  target="_blank" rel="nofollow"><span>Home Page</a></div>
 
 
 </body>

@@ -1,3 +1,10 @@
+body {
+  background: url("backGroundImg34.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 .Toolbar{
     background: -webkit-linear-gradient(right, #00dbde, #fc00ff, #00dbde, #fc00ff);
     background: -o-linear-gradient(right, #00dbde, #fc00ff, #00dbde, #fc00ff);
@@ -97,7 +104,6 @@
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
-    
     text-align: center;
 
   }

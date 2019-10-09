@@ -35,7 +35,7 @@
 
 </head>
 
-<body>
+<body >
     <script>
         $(document).ready(function () {
             firebase.auth().onAuthStateChanged(function (user) {
@@ -59,11 +59,11 @@
                         if (snapshot.val() != null) {
                             for (var i = 0; i < Object.keys(snapshot.val()).length; i++) {
                                 uidN = Object.keys(snapshot.val())[i]
-                                if (snapshot.val()[uidN]["Status"] == "FALSE") {
+                                if (snapshot.val()[uidN]["Status"] == "FALSE") {//count how mant requests have
                                     counter++;
                                 }
                             }
-                            if (counter > 99) {
+                            if (counter > 99) {//after 99 request show it like 99+
                                 $("#requestcounter").text(counter + "+")
                             }
                             else {
@@ -74,7 +74,7 @@
                         console.log("The read failed: " + errorObject.code);
                     });
 
-                    //After Client request Accept 
+                    //Retrive all  Clients request Accepted 
                     databaseRef.child('Coach/' + currUID + "/Your Clients").on("value", function (snapshot) {
                         var name = ""
                         var uidN = ""
@@ -138,7 +138,7 @@
             <label class="use-acc" id="user-email"></label>
             <button id="requestBtn" class="notification">
                 Requests
-                <span class="badge" id="requestcounter"></span>
+                <span class="badge" id="requestcounter" >0</span>
             </button>
             <button class="sgnout-btn" id="sgn-out">Sign out</button>
         </div>
@@ -149,7 +149,8 @@
 
 
     <div class="container-fluid">
-        <p align="middle">Your Clients</p>
+        <a align="middle">
+            <div style="background: darkslategray; color:white; margin-left: 40%; margin-right: 40%; margin-top: 30px; margin-bottom: 0px; padding: 10px;" >Your Clients</div> </a>
         <table id="Clients">
             <tr>
                 <th>Name</th>

@@ -77,7 +77,7 @@
             var i = 0;
             var dateJoined = todaydate();
             
-            /*Retrive the coachs from database by name*/
+            // accout type select
             $("#Mselect").click(() => {
                 if ($("#Mselect").val() == "Client") {
                     $("#goalChooseDiv").show(1000)
@@ -94,7 +94,7 @@
                             var name = ""
                             var uidN = ""
                             var optionsAsString = ""
-                            for (var i = 0; i < Object.keys(snapshot.val()).length; i++) {
+                            for (var i = 0; i < Object.keys(snapshot.val()).length; i++) { // Retrive coaches by name
                                 uidN = Object.keys(snapshot.val())[i]
                                 optionsAsString += "<option value='" + uidN + "'>" + snapshot.val()[uidN]["Username"] + "</option>";
                             }
@@ -104,7 +104,7 @@
                         });
                     } i++;
                 }
-                if ($("#Mselect").val() == "Coach") { //Hide NOT fields required Coach 
+                if ($("#Mselect").val() == "Coach") { //Hide fields required for clients 
                     $("#goalChooseDiv").hide(1000)
                     $("#coachChooseDiv").hide(1000)
                     $("#HightDIV").hide(1000)
@@ -116,34 +116,33 @@
             /*************************************/
 
 
-            /*Choose Profile Image*/
+            //Choose Profile Image
             var file;
             $("#imag").change((e) => {
                 file = e.target.files[0];
                 var fr = new FileReader();
                 fr.onload = function () {
                     document.getElementById("asd123").src = fr.result;
-                    // $("asd123").css("src", fr.result)
                 }
                 fr.readAsDataURL(file);
             });
             /*************************************/
 
-            /*Choose Body Image*/
+            //Choose Body Image
             var fileBody;
             $("#Bodyimag").change((e) => {
                 fileBody = e.target.files[0];
                 var fr = new FileReader();
                 fr.onload = function () {
                     document.getElementById("bimg").src = fr.result;
-                    // $("asd123").css("src", fr.result)
+                    
                 }
                 fr.readAsDataURL(fileBody);
             });
             /*************************************/
 
             $("#sign-up-btn").click(() => {
-                if (checkValidation()) {
+                if (checkValidation()) {//check validation
                    var age = diff_years($("#DateOfBirth").val());
                     firebase.auth().createUserWithEmailAndPassword($("#mail").val(), $("#pass").val()).then(function () {
                         var UID = firebase.auth().currentUser.uid;
@@ -182,9 +181,15 @@
                         console.log(error)
                     })
                         .then(() => {
+                            if ($("#Mselect").val() == "Coach") { //no need body image for coach REGISTER                                
+                            var userImageRef = storageRef.child('users-images/' + $("#mail").val().toLowerCase());
+                            userImageRef.put(file).then(alert("Register complet"))
+                            }
+                            if ($("#Mselect").val() == "Client") {
                             var userImageRef = storageRef.child('users-images/' + $("#mail").val().toLowerCase());
                             var userBodyImageRef = storageRef.child($("#mail").val().toLowerCase() + "/" + "1");
                             userImageRef.put(file).then(userBodyImageRef.put(fileBody).then(alert("Register complet")))
+                            }
 
                         }).catch(function (error) {
                             console.log(error.code);
@@ -242,7 +247,7 @@
                     alert("You Must Enter a Photo");
                     return false;
                 }
-                if (!$("#Bodyimag").val()) {
+                if (!$("#Bodyimag").val() && $("#Mselect").val() != 'Coach') {
                     alert("You Must Enter a Photo of your body");
                     return false;
                 }

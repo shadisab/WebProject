@@ -59,7 +59,7 @@
                
               
                 
-                //RETRIVE Client Name AND NUTRIONS
+                //RETRIVE Client Details
                 clientsREF.child(ClientUID).on("value", function (Client) {
                     
                     var child = storageRef.child('users-images/' + Client.val()["Email"] + '');
@@ -82,7 +82,7 @@
         })
     </script>
 
-    <h2 style="text-align:center"></h2>
+    <h2 style="text-align:center">User Profile Card</h2>
 
     <div class="card">
         <img src="profilecard.jpg"  style="width:100%" id="prof" >  

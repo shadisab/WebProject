@@ -1,3 +1,10 @@
+body {
+  background: url("backGroundImg5.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 #newClients {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
@@ -20,7 +27,7 @@
     background-color: #03b8bb;
     color: white;
   }
-/*****************ADD BUTTON*************************/
+/* ADD BUTTON */
   .example_b {
 color: #fff !important;
 text-transform: uppercase;
@@ -40,7 +47,7 @@ transition: all 0.4s ease 0s;
   transition: all 0.4s ease 0s;
   }
 
-/***************************************************/
+/* Back Button */
 .example_f {
   border-radius: 4px;
   background: linear-gradient(to right, #67b26b, #4ca2cb) !important;

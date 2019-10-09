@@ -1,3 +1,10 @@
+body {
+  background: url("backGroundImg4.jpg") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
 .Toolbar{
   background: -webkit-linear-gradient(right, #00dbde, #fc00ff, #00dbde, #fc00ff);
   background: -o-linear-gradient(right, #00dbde, #fc00ff, #00dbde, #fc00ff);
@@ -21,6 +28,7 @@
   margin-left: 10px;
   background: rgb(158, 58, 153);
   border-radius: 10px;
+  cursor: pointer;
 }
 .use-name:hover {
   background-color: rgb(173, 10, 152);
@@ -41,7 +49,7 @@
 
 }
 
-/*nutrition button*/
+/* nutrition button */
 .nutrition {
   background-color:rgb(0, 255, 213);
   font-family: Poppins-Medium;
@@ -65,7 +73,7 @@
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 
-/*goBack button**/
+/* goBack button */
 .goBack{
   background-color: rgb(0, 255, 213);
   font-family: Poppins-Medium;
@@ -89,7 +97,7 @@
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
   
 }
-/*weekly button*/
+/* weekly button */
 .weekly {
   background-color:rgb(0, 255, 213);
   font-family: Poppins-Medium;
@@ -136,7 +144,7 @@
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 
-/**********************nutrition TABLE***************************/
+/* nutrition TABLE */
 #nutritionTBL {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   border-collapse: collapse;
@@ -159,9 +167,9 @@
   background-color: #4CAF50;
   color: white;
 }
-/***********************************************************/
 
-/**********************WEEK TABLE***************************/
+
+/* WEEK TABLE */
 #Week {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   border-collapse: collapse;
@@ -186,7 +194,7 @@
   color: white;
 }
 
-/**********************Check TABLE***************************/
+/* Check TABLE */
 #CheckTB {
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   border-collapse: collapse;
@@ -214,7 +222,7 @@
 .mt-100 {
   margin-top: 100 !important;
 }
-/**************Image*****************/
+/* Image */
 .imggg {
   width: 50;
   height: 50;
@@ -244,7 +252,7 @@ div.ex1 {
 #fats {
   width: 3em;
 }
-/************exercises*************/
+/* exercises */
 .exercises {
   color: #4CAF50;
 }

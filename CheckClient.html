@@ -50,6 +50,26 @@
         var uidREF = databaseRef.child('Coach/' + currUID)
         var clientsREF = databaseRef.child('Client/')
 
+        $("#EndCoaching").click(() => {
+          if (confirm("Do you want to cancel COACHING!!?") == true) {
+            clientsREF.child(ClientUID + '/Nutrition/').remove();
+            clientsREF.child(ClientUID + '/Weekly/').remove();
+            ClientREF.remove();
+            var newClientREQ =databaseRef.child('Coach/' + currUID + "/New Client requests/" + ClientUID);
+            newClientREQ.remove();
+             //RETRIVE Client Name AND NUTRIONS
+        clientsREF.child(ClientUID).update({
+          Coach: "",
+          })
+            window.location.href = "CoachPage.html";
+          } else {
+            return;
+          }
+        })
+
+
+
+
         //RETRIVE Client Name AND NUTRIONS
         clientsREF.child(ClientUID).on("value", function (Client) {
           $("#user-name").html("Client: " + Client.val()["Username"])
@@ -96,7 +116,6 @@
               itemRef.getDownloadURL().then(function (url) {
                 imagesURL += "<img class='imggg' data-id='prof1' src=" + url + ">"
               }).then(function (url) {
-                console.log(imagesURL);
                 $("#checkupstableimage").append(imagesURL)
                 imagesURL = ""
               })
@@ -106,9 +125,6 @@
           });
 
         })
-
-
-
 
         //ADD NUtritions to Client
         $("#submitNutr").click(() => {
@@ -127,40 +143,33 @@
           clientsREF.child(ClientUID + "/Weekly/Sunday").set({
             SundayMG: $("#SundayMG").val(),
             SundayEX: $("#SundayEX").val(),
-          })
-          clientsREF.child(ClientUID + "/Weekly/Monday").set({
-            MondayMG: $("#MondayMG").val(),
-            MondayEX: $("#MondayEX").val(),
-          })
-          clientsREF.child(ClientUID + "/Weekly/Tuesday").set({
-            TuesdayMG: $("#TuesdayMG").val(),
-            TuesdayEX: $("#TuesdayEX").val(),
-          })
-          clientsREF.child(ClientUID + "/Weekly/Wednesday").set({
-            WednesdayMG: $("#WednesdayMG").val(),
-            WednesdayEX: $("#WednesdayEX").val(),
-          })
-          clientsREF.child(ClientUID + "/Weekly/Thursday").set({
-            ThursdayMG: $("#ThursdayMG").val(),
-            ThursdayEX: $("#ThursdayEX").val(),
-          })
-          clientsREF.child(ClientUID + "/Weekly/Friday").set({
-            FridayMG: $("#FridayMG").val(),
-            FridayEX: $("#FridayEX").val(),
-          })
-          clientsREF.child(ClientUID + "/Weekly/Saturday").set({
-            SaturdayMG: $("#SaturdayMG").val(),
-            SaturdayEX: $("#SaturdayEX").val(),
-          })
+          }).then(
+            clientsREF.child(ClientUID + "/Weekly/Monday").set({
+              MondayMG: $("#MondayMG").val(),
+              MondayEX: $("#MondayEX").val(),
+            })).then(
+              clientsREF.child(ClientUID + "/Weekly/Tuesday").set({
+                TuesdayMG: $("#TuesdayMG").val(),
+                TuesdayEX: $("#TuesdayEX").val(),
+              })).then(
+                clientsREF.child(ClientUID + "/Weekly/Wednesday").set({
+                  WednesdayMG: $("#WednesdayMG").val(),
+                  WednesdayEX: $("#WednesdayEX").val(),
+                })).then(
+                  clientsREF.child(ClientUID + "/Weekly/Thursday").set({
+                    ThursdayMG: $("#ThursdayMG").val(),
+                    ThursdayEX: $("#ThursdayEX").val(),
+                  })).then(
+                    clientsREF.child(ClientUID + "/Weekly/Friday").set({
+                      FridayMG: $("#FridayMG").val(),
+                      FridayEX: $("#FridayEX").val(),
+                    })).then(
+                      clientsREF.child(ClientUID + "/Weekly/Saturday").set({
+                        SaturdayMG: $("#SaturdayMG").val(),
+                        SaturdayEX: $("#SaturdayEX").val(),
+                      }))
         })
-
-
-
-
       })
-
-
-
 
       $("#nutrition").click(() => {
         $("#nutritionTBL").toggle(1000);
@@ -178,8 +187,6 @@
       $("#user-name").click(() => {
         window.location.href = "ClientProfile.html";
       })
-
-
     })
 
 
@@ -197,7 +204,7 @@
     <div class="Toolbar">
       <div class="col-2">
         <label class="use-name" id="user-name">
-          
+
         </label>
       </div>
       <div class="col-2">
@@ -225,6 +232,11 @@
       </div>
   </header>
   </div>
+
+  <div id="EndCoaching"
+    style="cursor: pointer; font-family: Georgia, 'Times New Roman', Times, serif; background: rgb(250, 3, 3); color:white; margin-top: 30px; margin-bottom: 0px;  margin-left: 1%; width: 130px; height: 30px; border-radius: 5px;">
+    End Coaching</div>
+
   <!-- Week Table -->
   <div class="row mt-100">
     <div class="col-1"></div>

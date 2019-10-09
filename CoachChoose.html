@@ -1,0 +1,90 @@
+<head>
+    <link rel="stylesheet" href="CoachChoose.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-storage.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/6.6.2/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/6.6.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.6.2/firebase-database.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+                 https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyCCkeCglasI9cz9KSrfgiTCMOzdgHNYhQM",
+            authDomain: "webproject-66098.firebaseapp.com",
+            databaseURL: "https://webproject-66098.firebaseio.com",
+            projectId: "webproject-66098",
+            storageBucket: "webproject-66098.appspot.com",
+            messagingSenderId: "578047006972",
+            appId: "1:578047006972:web:2fd6446310af9e46fc1f79",
+            measurementId: "G-VK41Q22SD9"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var storageRef = firebase.storage().ref();
+        var databaseRef = firebase.database().ref();
+    </script>
+
+</head>
+
+<body>
+    <script>
+        $(document).ready(function () {
+            var g = 0
+            firebase.auth().onAuthStateChanged(function (user) {
+                var currUID = firebase.auth().currentUser.uid;
+                var coachREF = databaseRef.child('Coach/')
+                var clientsREF = databaseRef.child('Client/' + currUID)
+                coachREF.on("value", function (snapshot) {
+                    var name = ""
+                    var uidN = ""
+                    var optionsAsString = ""
+                    for (var i = 0; i < Object.keys(snapshot.val()).length; i++) { // Retrive coaches by name
+                        uidN = Object.keys(snapshot.val())[i]
+                        optionsAsString += "<tr><td> " + snapshot.val()[uidN]["Username"] + "</td> <td> " + snapshot.val()[uidN]["Email"] + "</td>  <td><button class='example_b' data-id='" + uidN + "'> CHOOSE </button></td></tr> "
+                    }
+                    $("#newClients").append(optionsAsString);
+                }, function (errorObject) {
+                    console.log("The read failed: " + errorObject.code);
+                });
+
+                //CHANGE STATUS TO TRUE (ADD CLIENT)
+                $(document).on("click", "button", function (e) {
+                    clientsREF.update({
+                        Coach: $(this).attr('data-id'),
+                    })
+                    firebase
+                        .database()
+                        .ref('Coach/' + $(this).attr('data-id') + '/' + 'New Client requests/' + currUID + '/')
+                        .set({
+                            Status: "FALSE",
+                        }).then(() => {
+                            document.location.href = "ClientPage.html"
+                        })
+                });
+
+                $("#backBTN").click(() => {
+                    document.location.href = "ClientPage.html"
+                })
+
+            })
+
+        })
+    </script>
+
+    <table id="newClients">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Add Your Coach</th>
+        </tr>
+    </table>
+
+    <div align="center"><a id="backBTN" class="example_f" target="_blank" rel="nofollow"><span>Home Page</a></div>
+
+
+</body>
