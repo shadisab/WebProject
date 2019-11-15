@@ -43,9 +43,12 @@
                     var name = ""
                     var uidN = ""
                     var optionsAsString = ""
-                    for (var i = 0; i < Object.keys(snapshot.val()).length; i++) { // Retrive coaches by name
-                        uidN = Object.keys(snapshot.val())[i]
-                        optionsAsString += "<tr><td> " + snapshot.val()[uidN]["Username"] + "</td> <td> " + snapshot.val()[uidN]["Email"] + "</td>  <td><button class='example_b' data-id='" + uidN + "'> CHOOSE </button></td></tr> "
+                    if (g == 0) {
+                        g++;
+                        for (var i = 0; i < Object.keys(snapshot.val()).length; i++) { // Retrive coaches by name
+                            uidN = Object.keys(snapshot.val())[i]
+                            optionsAsString += "<tr><td> " + snapshot.val()[uidN]["Username"] + "</td> <td> " + snapshot.val()[uidN]["Email"] + "</td>  <td><button class='example_b' data-id='" + uidN + "'> CHOOSE </button></td></tr> "
+                        }
                     }
                     $("#newClients").append(optionsAsString);
                 }, function (errorObject) {

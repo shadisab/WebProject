@@ -80,9 +80,11 @@
             $("#fats").val(Client.val()["Nutrition"]["Fats"])
           }
         })
+        var i =0;
         //RETRIVE DATA OF WEEKLY WORKOUT
         clientsREF.child(ClientUID + "/Weekly").on("value", function (Client) {
-          if (Client.val() != null) {
+          if (Client.val() != null && i==0) {
+            i++;
             $("#SundayMG").val(Client.val()["Sunday"]["SundayMG"])
             $("#MondayMG").val(Client.val()["Monday"]["MondayMG"])
             $("#TuesdayMG").val(Client.val()["Tuesday"]["TuesdayMG"])
@@ -137,9 +139,25 @@
             Fats: fats,
           })
         })
+        //Clean WEEKLY WORKOUT FOR THE CLIENT
+        $("#CleantBTN").click(() => {
+          $("#SundayMG").val("")
+            $("#MondayMG").val("")
+            $("#TuesdayMG").val("")
+            $("#WednesdayMG").val("")
+            $("#ThursdayMG").val("")
+            $("#FridayMG").val("")
+            $("#SaturdayMG").val("")
+            $("#SundayEX").val("")
+            $("#MondayEX").val("")
+            $("#TuesdayEX").val("")
+            $("#WednesdayEX").val("")
+            $("#ThursdayEX").val("")
+            $("#FridayEX").val("")
+            $("#SaturdayEX").val("")
+        })
         //ADD WEEKLY WORKOUT FOR THE CLIENT
         $("#workOutBTN").click(() => {
-
           clientsREF.child(ClientUID + "/Weekly/Sunday").set({
             SundayMG: $("#SundayMG").val(),
             SundayEX: $("#SundayEX").val(),
@@ -302,7 +320,7 @@
         <th></th>
         <th></th>
         <th></th>
-        <th></th>
+        <th><button id="CleantBTN" class="example_b">Clean All</button></th>
         <th><button id="workOutBTN" class="example_b">Click to update</button></th>
       </tr>
     </table>

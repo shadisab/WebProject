@@ -183,12 +183,16 @@
                         .then(() => {
                             if ($("#Mselect").val() == "Coach") { //no need body image for coach REGISTER                                
                             var userImageRef = storageRef.child('users-images/' + $("#mail").val().toLowerCase());
-                            userImageRef.put(file).then(alert("Register complet"))
+                            userImageRef.put(file).then(alert("Register complet")).then(()=>{
+                                window.location.href = "LoginPage.html"
+                            })
                             }
                             if ($("#Mselect").val() == "Client") {
                             var userImageRef = storageRef.child('users-images/' + $("#mail").val().toLowerCase());
                             var userBodyImageRef = storageRef.child($("#mail").val().toLowerCase() + "/" + "1");
-                            userImageRef.put(file).then(userBodyImageRef.put(fileBody).then(alert("Register complet")))
+                            userImageRef.put(file).then(userBodyImageRef.put(fileBody).then(alert("Register complet"))).then(()=>{
+                                window.location.href = "LoginPage.html"
+                            })
                             }
 
                         }).catch(function (error) {
